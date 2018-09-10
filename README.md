@@ -5,7 +5,7 @@ Submission by : Ramya Sarma (ramyasarma13@gmail.com)
 
 ## System assumptions 
 I have assumed that the number of queries/ read requests is expected to be higher than updates.
-In other words, I assume that the frequency of updates to the rules is expected to be lesser than the number of queries.
+In other words, I assume that the frequency of updates to the rules is expected to be lesser than the frequency of queries.
 Also, I assume we have enough memory to store the preprocessed rules.
 
 ## Solution design
@@ -22,7 +22,7 @@ K2 is the direction.
 K3 is the protocol.
 
 ## Time complexity analysis
-Since I use preprocess the rules,
+Since I used preprocessed rules:
 
 LookUp/ Query - O(1) 
 Insertion of new query - O(n) where n is the number of valid queries possible allowed by the rule.
@@ -30,7 +30,8 @@ Insertion of new query - O(n) where n is the number of valid queries possible al
 I ran my solutions against the 4 example rules and found that it takes approximately 3-4 seconds to run. This is not ideal solution for real time systems and needs a lot of optimization.
 
 ## Memory vs performance tradeoffs
-I chose performance over memory. As stated in the assumptions, I expect the frequency of queries to be higher than the frequency of changes to the rules. 
+I chose performance over memory. As stated in the assumptions, I expect the frequency of queries to be higher than the frequency of changes to the rules.
+
 ## Space complexity analysis
 
 Since I store all the set of valid rules in the form of a dictionary, I need O(n) space where n is the number of IP addresses possible.
