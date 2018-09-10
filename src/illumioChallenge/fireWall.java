@@ -1,3 +1,9 @@
+/*
+ * Author : Ramya Sarma (ramyasarma13@gmail.com)
+ * Date : 10th September 2018
+*/
+
+//Required libraries and dependencies
 package illumioChallenge;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,16 +14,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Class definition
 public class fireWall {
+
 		String csv;
+		// Map to store the valid packets/queries
 		static HashMap<String, HashMap<String, String>> map = new HashMap<>();
+		// Parameterized constructor do to the preprocessing.
 		fireWall(String csv)
 		{
 			this.csv = csv;
 			// Initializing the HashMap from the rules file
 	        String line = "";
 	        String cvsSplitBy = ",";
-
+	        // Reading the csv line by line and doing the preprocessing
 	        try (BufferedReader br = new BufferedReader(new FileReader(csv))) {
 
 	            while ((line = br.readLine()) != null) {
@@ -28,6 +38,7 @@ public class fireWall {
 	                String protocol = rules[1]; 
 	                String port = rules[2];
 	                String ip_address = rules[3];
+	                // If both ip_address and port number are ranges
 	                if(ip_address.contains("-") && port.contains("-"))
 	                {
 	                    String lowIP=ip_address.split("-")[0];
@@ -40,7 +51,6 @@ public class fireWall {
 
 	                    long lowl = (long) low;
 	                    long highl = (long) high;
-	                    //System.out.println(lowl + " " + highl);
 
 	                    for(long i=lowl;i<=highl;i++){
 	                        List<String> sb = new ArrayList();
@@ -61,7 +71,6 @@ public class fireWall {
 	                            sb1.append(sb.get(j));
 	                        }
 	                        String ip = sb1.toString().substring(0,sb1.length()-1);
-	                        //System.out.println(sb1.toString().substring(0,sb1.length()-1));
 	                        Integer lowPort = Integer.parseInt(port.split("-")[0]);
 	                        Integer highPort = Integer.parseInt(port.split("-")[1]);
 	                        for(Integer i1=lowPort; i1<=highPort;i1++)
@@ -73,6 +82,7 @@ public class fireWall {
 	                        
 	                    }
 	                }
+	                // If only the ip address is a range
 	                else if(ip_address.contains("-") && !port.contains("-")) {
 	                    String lowIP=ip_address.split("-")[0];
 	                    String highIP=ip_address.split("-")[1];
@@ -105,15 +115,13 @@ public class fireWall {
 	                            sb1.append(sb.get(j));
 	                        }
 	                        String ip = sb1.toString().substring(0,sb1.length()-1);
-	                        //System.out.println(sb1.toString().substring(0,sb1.length()-1));
-	                        //Integer lowPort = Integer.parseInt(port.split("-")[0]);
-	                        //Integer highPort = Integer.parseInt(port.split("-")[1]);
 	                        HashMap<String,String> submap = new HashMap<String,String>();
 	                        submap.put(direction, protocol);
                         	map.put(ip + String.valueOf(port), submap);
 	                    }
 	                	
 	                }
+	                // if only the port numbers is a range
 	                else if(!ip_address.contains("-") && port.contains("-")) {
                         Integer lowPort = Integer.parseInt(port.split("-")[0]);
                         Integer highPort = Integer.parseInt(port.split("-")[1]);
@@ -134,23 +142,14 @@ public class fireWall {
 	            }
 
 	        } catch (IOException e) {
-	            e.printStackTrace();
+	            e.printStackTrace(); // File not found exception
 	        }
 			
 		}
-		// TODO : Accept function goes here
-		// TODO : Remove this before commit; Printing
-		public static void print()
-		{
-			for(Map.Entry<String, HashMap<String, String>> entry : map.entrySet())
-			{
-				System.out.print("Key:" + entry.getKey());
-				System.out.print("Value:" + entry.getValue());
-					
-			}
-		}
+		// Accept function starts here.
 		public static boolean accept_packet(String direction, String protocol,Integer port,String ip_address)
 		{
+			// Checking if the query exists in the map
 			if(map.containsKey(ip_address+port))
 			{
 				HashMap<String, String> submap = map.get(ip_address+port);
@@ -171,7 +170,6 @@ public class fireWall {
 		public static void main(String[] args)
 		{
 			fireWall fw = new fireWall("C:\\Users\\rsarm\\eclipse-workspace\\illumioChallenge\\src\\illumioChallenge\\fw.csv");
-			//print();
 			System.out.println(accept_packet("inbound", "tcp", 80, "256.174.130.100"));
 			System.out.println(accept_packet("inbound", "tcp", 80, "192.174.130.100"));
 		}
